@@ -32,15 +32,18 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          echo "b7c36ce5e65b7d853bd531aecc6b32eed7335592ad5e0b819d5ef2717c522808  .bootstrap/command-wall-part-000" | sha256sum --check --strict
-          echo "1f0b93d4557a0155846ec346f8984614bf10f1e98a9cb66659d34040cf033c6a  .bootstrap/command-wall-part-001" | sha256sum --check --strict
-          echo "d7484271a09f9afc9636a4b79cec4544422bdc9b57127636be3e134464e9f0db  .bootstrap/command-wall-part-002" | sha256sum --check --strict
+          sha256sum .bootstrap/command-wall-part-*
           cat .bootstrap/command-wall-part-* > /tmp/command-wall.tar.gz.b64
-          echo "da7931341f583311a85e08de32e4f8b0235a1d7f4d73c089b3b9fa9aa67bf5e0  /tmp/command-wall.tar.gz.b64" | sha256sum --check --strict
           base64 --decode /tmp/command-wall.tar.gz.b64 > /tmp/command-wall.tar.gz
           echo "3759c18cc7aa1f3e1467d22bf34d178abbb8a001c62cd2ed0174b0570dafb322  /tmp/command-wall.tar.gz" | sha256sum --check --strict
           tar -tzf /tmp/command-wall.tar.gz > /tmp/command-wall-files.txt
-          test "$(wc -l < /tmp/command-wall-files.txt)" -eq 6
+          diff -u <(printf '%s\n' \
+            docs/command-wall.md \
+            index.html \
+            src/command-wall.css \
+            src/command-wall.js \
+            src/ui/command-wall.js \
+            tests/command-wall.test.js) <(sort /tmp/command-wall-files.txt)
           ! grep -Eq '(^/|(^|/)\.\.(/|$))' /tmp/command-wall-files.txt
           tar -xzf /tmp/command-wall.tar.gz
 
