@@ -28,30 +28,52 @@ jobs:
         with:
           node-version: 22
 
-      - name: Verify and install command wall sources
+      - name: Reconstruct and verify command wall sources
         shell: bash
         run: |
           set -euo pipefail
-          echo "48c55ba85e86430f1a3518a3ff2f41b00cd313d17f227fc292eb9dc349ab25f0  .bootstrap/command-wall-part-000-aa" | sha256sum --check --strict
-          echo "f1152db3fa4eecb159e4d898c2d3e6f5d6cf683291e067e15fe4e7b7fdbaa343  .bootstrap/command-wall-part-000-b0" | sha256sum --check --strict
-          echo "d32a5db74619dd937ab20ef48e85d6a7f0982b36705a3cf9e3039f47bfdf46c0  .bootstrap/command-wall-part-000-b1" | sha256sum --check --strict
-          echo "58c5005fae00c933ef072e976be85adb3d4a004c3844745041cf6214a4b4ebb9  .bootstrap/command-wall-part-000-b2" | sha256sum --check --strict
-          echo "b5f4b322e4936b6573ada78b0e2d4df15a2d0dbf32ba716920c4d2743d00b4c0  .bootstrap/command-wall-part-000-b3" | sha256sum --check --strict
-          echo "f20716685d4b303c22dce7499b37dd96a3ec5bd57641ad1f037040b5ca3cae2a  .bootstrap/command-wall-part-000-b4" | sha256sum --check --strict
-          echo "ced0f5afdebb3e4156ae7dd47965de58479d492b23a4388d7f55f621560a4bdc  .bootstrap/command-wall-part-000-b5" | sha256sum --check --strict
-          echo "1f0b93d4557a0155846ec346f8984614bf10f1e98a9cb66659d34040cf033c6a  .bootstrap/command-wall-part-001" | sha256sum --check --strict
-          echo "d7484271a09f9afc9636a4b79cec4544422bdc9b57127636be3e134464e9f0db  .bootstrap/command-wall-part-002" | sha256sum --check --strict
-          cat \
-            .bootstrap/command-wall-part-000-aa \
-            .bootstrap/command-wall-part-000-b0 \
-            .bootstrap/command-wall-part-000-b1 \
-            .bootstrap/command-wall-part-000-b2 \
-            .bootstrap/command-wall-part-000-b3 \
-            .bootstrap/command-wall-part-000-b4 \
-            .bootstrap/command-wall-part-000-b5 \
-            .bootstrap/command-wall-part-001 \
-            .bootstrap/command-wall-part-002 \
-            > /tmp/command-wall.tar.gz.b64
+          python3 - <<'PY'
+          from collections import Counter
+          from pathlib import Path
+          import re
+
+          def read(path):
+              return Path(path).read_text()
+
+          def majority(label, variants):
+              lengths = {len(value) for value in variants}
+              if len(lengths) != 1:
+                  raise SystemExit(f"{label}: variant lengths differ: {sorted(lengths)}")
+              output = []
+              corrected = 0
+              for index, chars in enumerate(zip(*variants)):
+                  char, votes = Counter(chars).most_common(1)[0]
+                  if votes < 2:
+                      raise SystemExit(f"{label}: no majority at character {index}: {chars}")
+                  corrected += len(set(chars)) > 1
+                  output.append(char)
+              print(f"{label}: reconstructed {len(output)} characters with {corrected} disputed positions")
+              return ''.join(output)
+
+          original = read('.bootstrap/command-wall-part-000')
+          prefix = read('.bootstrap/command-wall-part-000-aa')
+          middle = majority('middle', [
+              original[3000:6000],
+              read('.bootstrap/command-wall-part-000-ab'),
+              read('.bootstrap/command-wall-part-000-b0') + read('.bootstrap/command-wall-part-000-b1') + read('.bootstrap/command-wall-part-000-b2'),
+          ])
+          tail = majority('tail', [
+              original[6000:9000],
+              read('.bootstrap/command-wall-part-000-ac'),
+              read('.bootstrap/command-wall-part-000-b3') + read('.bootstrap/command-wall-part-000-b4') + read('.bootstrap/command-wall-part-000-b5'),
+          ])
+          encoded = prefix + middle + tail + read('.bootstrap/command-wall-part-001') + read('.bootstrap/command-wall-part-002')
+          if len(prefix) != 3000 or len(original) != 9000 or len(encoded) != 23856:
+              raise SystemExit('unexpected command wall bundle length')
+          if not re.fullmatch(r'[A-Za-z0-9+/=]+', encoded):
+              raise SystemExit('bundle contains non-base64 characters')
+          Path('/tmp/command-wall.tar.gz.b64').write_text(encoded)
+          PY
           base64 --decode /tmp/command-wall.tar.gz.b64 > /tmp/command-wall.tar.gz
           echo "3759c18cc7aa1f3e1467d22bf34d178abbb8a001c62cd2ed0174b0570dafb322  /tmp/command-wall.tar.gz" | sha256sum --check --strict
           tar -tzf /tmp/command-wall.tar.gz > /tmp/command-wall-files.txt
