@@ -90,8 +90,8 @@ jobs:
 
           replace_once(
               "CHANGELOG.md",
-              '### Added\n\n',
-              '### Added\n\n- Cinematic Command Wall with synchronized topology/wall switching, phase navigation, manual and automatic camera shots, and deep-linkable wall state.\n- Dedicated large-screen treatments for Control Plane Eclipse, Cipher Furnace, and Blackout Ledger, plus a generic wall for every built-in scene.\n',
+              '## [Unreleased]\n\n### Added\n\n',
+              '## [Unreleased]\n\n### Added\n\n- Cinematic Command Wall with synchronized topology/wall switching, phase navigation, manual and automatic camera shots, and deep-linkable wall state.\n- Dedicated large-screen treatments for Control Plane Eclipse, Cipher Furnace, and Blackout Ledger, plus a generic wall for every built-in scene.\n',
           )
 
       - name: Remove one-time assembly files
