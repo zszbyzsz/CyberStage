@@ -32,8 +32,18 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          sha256sum .bootstrap/command-wall-part-*
-          cat .bootstrap/command-wall-part-* > /tmp/command-wall.tar.gz.b64
+          echo "48c55ba85e86430f1a3518a3ff2f41b00cd313d17f227fc292eb9dc349ab25f0  .bootstrap/command-wall-part-000-aa" | sha256sum --check --strict
+          echo "9dc904ecd073b6384961c5b02638bb7aca786356b5d96bca1c4f13f5783707e1  .bootstrap/command-wall-part-000-ab" | sha256sum --check --strict
+          echo "fb78a0f2751772640f026e6c725099fa4bc7ab7d2b91c8c369740a034dda2d86  .bootstrap/command-wall-part-000-ac" | sha256sum --check --strict
+          echo "1f0b93d4557a0155846ec346f8984614bf10f1e98a9cb66659d34040cf033c6a  .bootstrap/command-wall-part-001" | sha256sum --check --strict
+          echo "d7484271a09f9afc9636a4b79cec4544422bdc9b57127636be3e134464e9f0db  .bootstrap/command-wall-part-002" | sha256sum --check --strict
+          cat \
+            .bootstrap/command-wall-part-000-aa \
+            .bootstrap/command-wall-part-000-ab \
+            .bootstrap/command-wall-part-000-ac \
+            .bootstrap/command-wall-part-001 \
+            .bootstrap/command-wall-part-002 \
+            > /tmp/command-wall.tar.gz.b64
           base64 --decode /tmp/command-wall.tar.gz.b64 > /tmp/command-wall.tar.gz
           echo "3759c18cc7aa1f3e1467d22bf34d178abbb8a001c62cd2ed0174b0570dafb322  /tmp/command-wall.tar.gz" | sha256sum --check --strict
           tar -tzf /tmp/command-wall.tar.gz > /tmp/command-wall-files.txt
