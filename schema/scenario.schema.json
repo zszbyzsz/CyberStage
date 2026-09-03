@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/cyberstage/scenario.schema.json",
+  "title": "CyberStage Scenario",
+  "description": "A simulation-only visual scene for CyberStage.",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "subtitle",
+    "safety",
+    "theme",
+    "durationMs",
+    "nodes",
+    "links",
+    "events"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,47}$" },
+    "title": { "type": "string", "minLength": 3, "maxLength": 80 },
+    "subtitle": { "type": "string", "minLength": 3, "maxLength": 140 },
+    "safety": { "const": "simulation-only" },
+    "theme": { "enum": ["cyan", "amber", "violet"] },
+    "durationMs": { "type": "number", "minimum": 10000, "maximum": 600000 },
+    "initialPhase": { "type": "string", "maxLength": 32 },
+    "synopsis": { "type": "string", "maxLength": 500 },
+    "objective": { "type": "string", "maxLength": 500 },
+    "directorNote": { "type": "string", "maxLength": 500 },
+    "initialMetrics": { "$ref": "#/$defs/metrics" },
+    "nodes": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 24,
+      "items": { "$ref": "#/$defs/node" }
+    },
+    "links": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 40,
+      "items": { "$ref": "#/$defs/link" }
+    },
+    "events": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 240,
+      "items": { "$ref": "#/$defs/event" }
+    }
+  },
+  "$defs": {
+    "slug": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,47}$" },
+    "status": {
+      "enum": ["idle", "watch", "suspect", "alert", "contained", "trusted", "offline", "restored"]
+    },
+    "severity": { "enum": ["info", "low", "medium", "high", "critical", "success"] },
+    "percentage": { "type": "number", "minimum": 0, "maximum": 100 },
+    "metrics": {
+      "type": "object",
+      "properties": {
+        "threat": { "$ref": "#/$defs/percentage" },
+        "trust": { "$ref": "#/$defs/percentage" },
+        "load": { "$ref": "#/$defs/percentage" },
+        "containment": { "$ref": "#/$defs/percentage" }
+      },
+      "additionalProperties": false
+    },
+    "node": {
+      "type": "object",
+      "required": ["id", "label", "type", "zone", "x", "y", "address", "description"],
+      "properties": {
+        "id": { "$ref": "#/$defs/slug" },
+        "label": { "type": "string", "minLength": 2, "maxLength": 48 },
+        "short": { "type": "string", "minLength": 1, "maxLength": 4 },
+        "type": {
+          "enum": ["external", "gateway", "identity", "service", "database", "soc", "sensor", "archive", "broadcast"]
+        },
+        "zone": { "type": "string", "maxLength": 32 },
+        "x": { "type": "number", "minimum": 30, "maximum": 970 },
+        "y": { "type": "number", "minimum": 30, "maximum": 590 },
+        "address": { "type": "string", "maxLength": 64 },
+        "description": { "type": "string", "maxLength": 240 },
+        "status": { "$ref": "#/$defs/status" }
+      }
+    },
+    "link": {
+      "type": "object",
+      "required": ["id", "from", "to"],
+      "properties": {
+        "id": { "$ref": "#/$defs/slug" },
+        "from": { "$ref": "#/$defs/slug" },
+        "to": { "$ref": "#/$defs/slug" },
+        "label": { "type": "string", "maxLength": 24 },
+        "status": { "$ref": "#/$defs/status" }
+      }
+    },
+    "nodeMutation": {
+      "type": "object",
+      "required": ["id", "status"],
+      "properties": {
+        "id": { "$ref": "#/$defs/slug" },
+        "status": { "$ref": "#/$defs/status" },
+        "signal": { "$ref": "#/$defs/percentage" },
+        "note": { "type": "string", "maxLength": 180 }
+      }
+    },
+    "linkMutation": {
+      "type": "object",
+      "required": ["id", "status"],
+      "properties": {
+        "id": { "$ref": "#/$defs/slug" },
+        "status": { "$ref": "#/$defs/status" }
+      }
+    },
+    "flow": {
+      "type": "object",
+      "required": ["from", "to", "durationMs"],
+      "properties": {
+        "from": { "$ref": "#/$defs/slug" },
+        "to": { "$ref": "#/$defs/slug" },
+        "durationMs": { "type": "number", "minimum": 400, "maximum": 20000 }
+      }
+    },
+    "log": {
+      "type": "object",
+      "required": ["channel", "text"],
+      "properties": {
+        "channel": { "type": "string", "maxLength": 24 },
+        "text": { "type": "string", "maxLength": 280 }
+      }
+    },
+    "event": {
+      "type": "object",
+      "required": ["at"],
+      "properties": {
+        "at": { "type": "number", "minimum": 0 },
+        "phase": { "type": "string", "maxLength": 32 },
+        "title": { "type": "string", "maxLength": 120 },
+        "detail": { "type": "string", "maxLength": 300 },
+        "severity": { "$ref": "#/$defs/severity" },
+        "caption": { "type": "string", "maxLength": 360 },
+        "metrics": { "$ref": "#/$defs/metrics" },
+        "nodes": { "type": "array", "items": { "$ref": "#/$defs/nodeMutation" } },
+        "links": { "type": "array", "items": { "$ref": "#/$defs/linkMutation" } },
+        "flow": { "$ref": "#/$defs/flow" },
+        "logs": { "type": "array", "items": { "$ref": "#/$defs/log" } }
+      }
+    }
+  }
+}

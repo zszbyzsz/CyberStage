@@ -1,0 +1,17 @@
+{
+  "name": "CyberStage",
+  "short_name": "CyberStage",
+  "description": "A cinematic, simulation-only cyber operations stage.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#050a0f",
+  "theme_color": "#071018",
+  "icons": [
+    {
+      "src": "./assets/cyberstage-mark.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

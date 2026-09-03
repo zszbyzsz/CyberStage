@@ -1,0 +1,95 @@
+{
+  "id": "signal-rehearsal",
+  "title": "Signal Rehearsal",
+  "subtitle": "A minimal two-node scene for learning the CyberStage format.",
+  "safety": "simulation-only",
+  "theme": "cyan",
+  "durationMs": 20000,
+  "initialPhase": "STANDBY",
+  "initialMetrics": {
+    "threat": 3,
+    "trust": 97,
+    "load": 20,
+    "containment": 0
+  },
+  "synopsis": "A generated signal travels between two fictional nodes.",
+  "objective": "Demonstrate the smallest useful CyberStage scene.",
+  "directorNote": "Use this file as a starting point for local scene imports.",
+  "nodes": [
+    {
+      "id": "signal-source",
+      "label": "SIGNAL SOURCE",
+      "short": "SS",
+      "type": "external",
+      "zone": "STAGE",
+      "x": 230,
+      "y": 310,
+      "address": "198.51.100.10",
+      "description": "A fictional source that exists only in the scene data."
+    },
+    {
+      "id": "defense-desk",
+      "label": "DEFENSE DESK",
+      "short": "DD",
+      "type": "soc",
+      "zone": "DEFENSE",
+      "x": 770,
+      "y": 310,
+      "address": "203.0.113.10",
+      "description": "A fictional monitoring desk for the visual rehearsal."
+    }
+  ],
+  "links": [
+    {
+      "id": "source-desk",
+      "from": "signal-source",
+      "to": "defense-desk",
+      "label": "SIGNAL"
+    }
+  ],
+  "events": [
+    {
+      "at": 0,
+      "phase": "OBSERVE",
+      "title": "Rehearsal armed",
+      "detail": "The local timeline is ready.",
+      "severity": "info",
+      "caption": "A small signal appears on an entirely fictional stage.",
+      "nodes": [
+        { "id": "defense-desk", "status": "watch", "signal": 30 }
+      ],
+      "logs": [
+        { "channel": "stage", "text": "minimal scene online · transport disabled" }
+      ]
+    },
+    {
+      "at": 10000,
+      "phase": "VERIFY",
+      "title": "Signal verified",
+      "detail": "The generated cue reaches the defense desk.",
+      "severity": "success",
+      "caption": "The scene resolves without contacting any external system.",
+      "metrics": {
+        "threat": 2,
+        "trust": 99,
+        "load": 24,
+        "containment": 100
+      },
+      "nodes": [
+        { "id": "signal-source", "status": "trusted", "signal": 35 },
+        { "id": "defense-desk", "status": "trusted", "signal": 60 }
+      ],
+      "links": [
+        { "id": "source-desk", "status": "trusted" }
+      ],
+      "flow": {
+        "from": "signal-source",
+        "to": "defense-desk",
+        "durationMs": 3000
+      },
+      "logs": [
+        { "channel": "defense", "text": "signal verified · impact=none" }
+      ]
+    }
+  ]
+}

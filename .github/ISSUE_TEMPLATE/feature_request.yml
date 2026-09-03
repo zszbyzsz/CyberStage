@@ -1,0 +1,46 @@
+name: Feature request
+description: Propose a cinematic, authoring, accessibility, or educational improvement.
+title: "feat: "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Creative or user problem
+      description: What production, teaching, accessibility, or authoring need is not met today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed experience
+      description: Describe what a user sees and does rather than only an implementation.
+    validations:
+      required: true
+  - type: textarea
+    id: safety
+    attributes:
+      label: Safety-boundary analysis
+      description: Explain why this remains visual and simulation-only. Identify any new browser capability.
+    validations:
+      required: true
+  - type: dropdown
+    id: audience
+    attributes:
+      label: Primary audience
+      options:
+        - Film and television
+        - Live presentation or streaming
+        - Education
+        - Scene authors
+        - Accessibility users
+        - Project maintainers
+        - Other
+    validations:
+      required: true
+  - type: checkboxes
+    id: non-goals
+    attributes:
+      label: Non-goal confirmation
+      options:
+        - label: This proposal does not add live transport, scanning, command execution, or actionable attack guidance.
+          required: true

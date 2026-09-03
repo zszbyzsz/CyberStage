@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en" data-theme="cyan">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <meta
+      name="description"
+      content="CyberStage is a cinematic, simulation-only network defense visualizer for film, education, and live demos."
+    />
+    <meta name="theme-color" content="#071018" />
+    <meta name="color-scheme" content="dark" />
+    <title>CyberStage · Cinematic Cyber Operations Simulator</title>
+    <link rel="icon" href="./assets/cyberstage-mark.svg" type="image/svg+xml" />
+    <link rel="manifest" href="./site.webmanifest" />
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <div class="ambient ambient-one" aria-hidden="true"></div>
+    <div class="ambient ambient-two" aria-hidden="true"></div>
+
+    <div class="app-shell">
+      <header class="app-header">
+        <a class="brand" href="./" aria-label="CyberStage home">
+          <img src="./assets/cyberstage-mark.svg" alt="" width="38" height="38" />
+          <span class="brand-copy">
+            <strong>CYBERSTAGE</strong>
+            <small>DIRECT THE SIGNAL</small>
+          </span>
+        </a>
+
+        <div class="scene-picker">
+          <label for="scenario-select">SCENE</label>
+          <select id="scenario-select" aria-label="Select a CyberStage scene"></select>
+          <span id="scenario-count" class="scene-count">0 SCENES</span>
+        </div>
+
+        <div class="header-status" aria-label="Simulation status">
+          <span class="status-cluster">
+            <span id="live-dot" class="live-dot" aria-hidden="true"></span>
+            <span>LOCAL ENGINE</span>
+          </span>
+          <span class="status-cluster safety-cluster">
+            <span class="shield-glyph" aria-hidden="true">◇</span>
+            <span>SIMULATION ONLY</span>
+          </span>
+          <span id="stage-state" class="stage-state" data-level="nominal">NOMINAL</span>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <aside class="side-rail left-rail" aria-label="Scene details">
+          <section id="scenario-brief" class="panel scenario-brief"></section>
+          <section id="node-inspector" class="panel node-inspector"></section>
+          <section class="panel shortcut-panel">
+            <span class="eyebrow">DIRECTOR KEYS</span>
+            <dl class="shortcut-list">
+              <div><dt><kbd>Space</kbd></dt><dd>Play / pause</dd></div>
+              <div><dt><kbd>←</kbd><kbd>→</kbd></dt><dd>Seek five seconds</dd></div>
+              <div><dt><kbd>R</kbd></dt><dd>Reset scene</dd></div>
+              <div><dt><kbd>B</kbd></dt><dd>Broadcast framing</dd></div>
+              <div><dt><kbd>F</kbd></dt><dd>Fullscreen</dd></div>
+              <div><dt><kbd>1–9</kbd></dt><dd>Choose scene</dd></div>
+            </dl>
+          </section>
+        </aside>
+
+        <section class="stage-column" aria-label="CyberStage visualizer">
+          <section class="panel stage-panel">
+            <div class="stage-toolbar">
+              <div>
+                <span class="eyebrow">SYNTHETIC NETWORK MAP</span>
+                <strong id="phase-label" class="phase-label">STANDBY</strong>
+              </div>
+              <div class="stage-coordinates" aria-hidden="true">
+                <span>CAM 01</span>
+                <span>FRAME 16:9</span>
+                <span>LOCAL</span>
+              </div>
+            </div>
+
+            <div id="topology" class="topology" aria-live="off"></div>
+
+            <div class="simulation-watermark" aria-hidden="true">
+              <span>SIMULATION</span>
+              <small>NO LIVE TARGETS</small>
+            </div>
+            <div class="camera-corner camera-corner-tl" aria-hidden="true"></div>
+            <div class="camera-corner camera-corner-tr" aria-hidden="true"></div>
+            <div class="camera-corner camera-corner-bl" aria-hidden="true"></div>
+            <div class="camera-corner camera-corner-br" aria-hidden="true"></div>
+
+            <div class="scene-caption-wrap">
+              <span>DIRECTOR CAPTION</span>
+              <p id="scene-caption">Awaiting scene data.</p>
+            </div>
+          </section>
+
+          <section class="panel terminal-panel" aria-label="Synthetic event console">
+            <div class="terminal-head">
+              <div class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+              <strong>STAGE EVENT CONSOLE</strong>
+              <span>READ-ONLY · GENERATED LOCALLY</span>
+            </div>
+            <div id="terminal-output" class="terminal-output" role="log" aria-live="polite"></div>
+          </section>
+        </section>
+
+        <aside class="side-rail right-rail" aria-label="Telemetry and event feed">
+          <section class="panel telemetry-panel">
+            <div class="panel-heading">
+              <span class="eyebrow">TELEMETRY</span>
+              <span class="tiny-badge">SYNTHETIC</span>
+            </div>
+            <div id="metrics" class="metrics-grid"></div>
+          </section>
+
+          <section class="panel feed-panel">
+            <div class="panel-heading">
+              <span class="eyebrow">INCIDENT CUES</span>
+              <span class="tiny-badge">CLICK TO SEEK</span>
+            </div>
+            <div id="event-feed" class="event-feed"></div>
+          </section>
+
+          <section class="panel safety-panel">
+            <div class="safety-icon" aria-hidden="true">CS</div>
+            <div>
+              <strong>SAFE BY CONSTRUCTION</strong>
+              <p>No network transport, command execution, scanning, or live targeting exists in the runtime.</p>
+            </div>
+          </section>
+        </aside>
+      </main>
+
+      <footer class="director-console" aria-label="Director controls">
+        <div class="transport-controls">
+          <button id="reset-button" class="control-button compact" type="button">RESET</button>
+          <button id="back-button" class="control-button compact" type="button" aria-label="Back five seconds">−5S</button>
+          <button id="play-button" class="control-button primary" type="button">▶ PLAY</button>
+          <button id="forward-button" class="control-button compact" type="button" aria-label="Forward five seconds">+5S</button>
+        </div>
+
+        <div class="timeline-console">
+          <div class="timeline-readout">
+            <span id="clock-readout">00:00.0</span>
+            <span class="timeline-slash">/</span>
+            <span id="duration-readout">00:00.0</span>
+          </div>
+          <div class="timeline-stack">
+            <div id="timeline-markers" class="timeline-markers"></div>
+            <input
+              id="timeline-input"
+              class="timeline-input"
+              type="range"
+              min="0"
+              max="90000"
+              value="0"
+              step="50"
+              aria-label="Scene timeline"
+            />
+          </div>
+          <div class="speed-controls" aria-label="Playback speed">
+            <button type="button" data-speed="0.5" aria-pressed="false">0.5×</button>
+            <button type="button" data-speed="1" aria-pressed="true">1×</button>
+            <button type="button" data-speed="1.5" aria-pressed="false">1.5×</button>
+            <button type="button" data-speed="2" aria-pressed="false">2×</button>
+          </div>
+        </div>
+
+        <div class="director-actions">
+          <button id="random-button" class="control-button" type="button">RANDOM SCENE</button>
+          <button id="import-button" class="control-button" type="button">IMPORT JSON</button>
+          <input id="import-input" type="file" accept="application/json,.json" hidden />
+          <button id="copy-link-button" class="control-button" type="button">COPY LINK</button>
+          <button id="sound-button" class="control-button" type="button" aria-pressed="false">SOUND OFF</button>
+          <button id="broadcast-button" class="control-button" type="button" aria-pressed="false">BROADCAST</button>
+          <button id="fullscreen-button" class="control-button" type="button">FULLSCREEN</button>
+        </div>
+      </footer>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <noscript>CyberStage needs JavaScript to run its local simulation timeline.</noscript>
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>
