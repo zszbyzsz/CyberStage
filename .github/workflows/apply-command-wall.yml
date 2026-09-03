@@ -1,0 +1,111 @@
+name: Integrate cinematic command wall
+
+on:
+  push:
+    branches:
+      - feat/cinematic-command-wall
+    paths:
+      - ".bootstrap/command-wall-part-*"
+      - ".github/workflows/apply-command-wall.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  integrate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+
+    steps:
+      - name: Check out feature branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: feat/cinematic-command-wall
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 22
+
+      - name: Verify and install command wall sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "b7c36ce5e65b7d853bd531aecc6b32eed7335592ad5e0b819d5ef2717c522808  .bootstrap/command-wall-part-000" | sha256sum --check --strict
+          echo "1f0b93d4557a0155846ec346f8984614bf10f1e98a9cb66659d34040cf033c6a  .bootstrap/command-wall-part-001" | sha256sum --check --strict
+          echo "d7484271a09f9afc9636a4b79cec4544422bdc9b57127636be3e134464e9f0db  .bootstrap/command-wall-part-002" | sha256sum --check --strict
+          cat .bootstrap/command-wall-part-* > /tmp/command-wall.tar.gz.b64
+          echo "da7931341f583311a85e08de32e4f8b0235a1d7f4d73c089b3b9fa9aa67bf5e0  /tmp/command-wall.tar.gz.b64" | sha256sum --check --strict
+          base64 --decode /tmp/command-wall.tar.gz.b64 > /tmp/command-wall.tar.gz
+          echo "3759c18cc7aa1f3e1467d22bf34d178abbb8a001c62cd2ed0174b0570dafb322  /tmp/command-wall.tar.gz" | sha256sum --check --strict
+          tar -tzf /tmp/command-wall.tar.gz > /tmp/command-wall-files.txt
+          test "$(wc -l < /tmp/command-wall-files.txt)" -eq 6
+          ! grep -Eq '(^/|(^|/)\.\.(/|$))' /tmp/command-wall-files.txt
+          tar -xzf /tmp/command-wall.tar.gz
+
+      - name: Update project discovery documentation
+        shell: python
+        run: |
+          from pathlib import Path
+
+          def replace_once(path, old, new):
+              file = Path(path)
+              text = file.read_text()
+              if text.count(old) != 1:
+                  raise SystemExit(f"{path}: expected marker count 1, found {text.count(old)}")
+              file.write_text(text.replace(old, new))
+
+          replace_once(
+              "README.md",
+              '  <a href="./docs/scene-catalogue.md">Scene catalogue</a>',
+              '  <a href="./docs/scene-catalogue.md">Scene catalogue</a>\n  ·\n  <a href="./docs/command-wall.md">Command Wall</a>',
+          )
+          replace_once(
+              "README.md",
+              '- Enter **Broadcast Mode** for a clean full-screen shot suitable for video or projection.',
+              '- Switch to the **Cinematic Command Wall** for a phase ladder, authority contest, protected-system lanes, detailed telemetry, and previous/current/next cue framing.\n- Enter **Broadcast Mode** for a clean full-screen shot suitable for video or projection.',
+          )
+          replace_once(
+              "README.md",
+              '| `F` | Toggle fullscreen |\n| `1`–`9` | Select a scene |',
+              '| `F` | Toggle fullscreen |\n| `W` | Toggle Cinematic Command Wall |\n| `V` | Cycle Command Wall shots |\n| `1`–`9` | Select a scene |',
+          )
+
+          replace_once(
+              "README.zh-CN.md",
+              '  <a href="./docs/scene-catalogue.md">场景目录</a>',
+              '  <a href="./docs/scene-catalogue.md">场景目录</a>\n  ·\n  <a href="./docs/command-wall.md">影视指挥大屏</a>',
+          )
+          replace_once(
+              "README.zh-CN.md",
+              '- **影视展示模式**：Broadcast Mode 会隐藏非必要面板，适合全屏录制、投屏或作为影视屏幕素材。',
+              '- **影视指挥大屏**：在同一时间轴上切换阶段轨道、控制权争夺、受保护系统、细节遥测和前后镜头；Control Plane Eclipse、Cipher Furnace 与 Blackout Ledger 具备专属大屏。\n- **影视展示模式**：Broadcast Mode 会隐藏非必要面板，适合全屏录制、投屏或作为影视屏幕素材。',
+          )
+          replace_once(
+              "README.zh-CN.md",
+              '| `F` | 切换全屏 |\n| `1`–`9` | 快速切换场景 |',
+              '| `F` | 切换全屏 |\n| `W` | 切换影视指挥大屏 |\n| `V` | 循环切换大屏镜头 |\n| `1`–`9` | 快速切换场景 |',
+          )
+
+          replace_once(
+              "CHANGELOG.md",
+              '### Added\n\n',
+              '### Added\n\n- Cinematic Command Wall with synchronized topology/wall switching, phase navigation, manual and automatic camera shots, and deep-linkable wall state.\n- Dedicated large-screen treatments for Control Plane Eclipse, Cipher Furnace, and Blackout Ledger, plus a generic wall for every built-in scene.\n',
+          )
+
+      - name: Remove one-time assembly files
+        run: rm -rf .bootstrap .github/workflows/apply-command-wall.yml
+
+      - name: Validate complete project
+        run: npm run check
+
+      - name: Commit integrated command wall
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add --all
+          git commit -m "feat: add cinematic command wall"
+          git push origin HEAD:feat/cinematic-command-wall
