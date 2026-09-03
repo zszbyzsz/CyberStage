@@ -1,3 +1,4 @@
+# One-time source assembly workflow. Removed before merge.
 name: Assemble CyberStage v0.1
 
 on:
