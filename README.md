@@ -25,6 +25,8 @@
   <a href="./docs/scenario-format.md">Create a scene</a>
   ·
   <a href="./docs/scene-catalogue.md">Scene catalogue</a>
+  ·
+  <a href="./docs/command-wall.md">Command Wall</a>
 </p>
 
 ![CyberStage interface preview](./assets/preview.svg)
@@ -39,11 +41,12 @@ CyberStage turns defensive telemetry into something that can be **directed like 
 - Play, pause, scrub, loop, and change speed on a deterministic incident timeline.
 - Watch signals travel across an animated SVG topology while nodes change state.
 - Cut between [nine built-in story worlds](./docs/scene-catalogue.md), including password auditing, server-control contention, ransomware recovery, phishing response, availability defense, and software-integrity incidents.
+- Switch to the **Cinematic Command Wall** for a phase ladder, authority contest, protected-system lanes, detailed telemetry, and previous/current/next cue framing.
 - Enter **Broadcast Mode** for a clean full-screen shot suitable for video or projection.
 - Enable a small local soundscape generated with the Web Audio API—no audio files required.
 - Click any node to inspect its fictional zone, address, links, and signal state.
 - Import a local JSON scene without uploading it anywhere.
-- Share a scene, timestamp, playback state, and broadcast framing in one URL.
+- Share a scene, timestamp, playback state, broadcast framing, and wall camera treatment in one URL.
 
 The entire runtime is browser-native JavaScript, CSS, and SVG. There is no package installation step and no runtime dependency graph.
 
@@ -77,9 +80,11 @@ npm run check  # run every project check
 | `R` | Reset the current scene |
 | `B` | Toggle Broadcast Mode |
 | `F` | Toggle fullscreen |
+| `W` | Toggle Cinematic Command Wall |
+| `V` | Cycle wall shots: Auto, Overview, Contest, Containment, Recovery |
 | `1`–`9` | Select a scene |
 
-The timeline, event feed, playback-speed buttons, and topology nodes are also interactive.
+The timeline, event feed, playback-speed buttons, topology nodes, Command Wall phases, protected-system cards, and cue deck are interactive.
 
 ## Scene model
 
@@ -115,13 +120,14 @@ Scenario compiler ── sorts and freezes a deterministic event timeline
 Frame derivation ── pure reduction from (scene, time) to visual state
    │
    ├── SVG topology
+   ├── cinematic Command Wall
    ├── telemetry cards
    ├── incident cue feed
    ├── generated event console
    └── director timeline / URL state
 ```
 
-The engine does not mutate a scene while it plays. Every frame is derived from the same scene and timestamp, making playback reproducible and testable. See [architecture](./docs/architecture.md).
+The engine does not mutate a scene while it plays. Every frame is derived from the same scene and timestamp, making playback reproducible and testable. The Command Wall consumes that same frame and adds no separate simulation state. See [architecture](./docs/architecture.md).
 
 ## Safety by construction
 

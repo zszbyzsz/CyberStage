@@ -18,6 +18,8 @@
   <a href="./docs/scenario-format.md">编写新场景</a>
   ·
   <a href="./docs/scene-catalogue.md">场景目录</a>
+  ·
+  <a href="./docs/command-wall.md">影视指挥大屏</a>
 </p>
 
 ![CyberStage 界面预览](./assets/preview.svg)
@@ -30,6 +32,9 @@
 - **九套完整剧情**：除三套原创世界外，新增密码审计、服务器后台控制权争夺、勒索事件恢复、钓鱼会话劫持、流量洪峰和软件供应链篡改；详见[场景目录](./docs/scene-catalogue.md)。
 - **可导演时间轴**：播放、暂停、拖动、循环以及 `0.5×`–`2×` 倍速。
 - **动态攻防拓扑**：信号沿 SVG 链路移动，节点随事件进入观察、告警、隔离和恢复状态。
+- **影视指挥大屏**：在同一时间轴上展示阶段轨道、攻防压力、控制权争夺、受保护系统、详细遥测以及前一幕/当前幕/下一幕。
+- **三套专属大屏**：Control Plane Eclipse 展示控制权天平与配置漂移；Cipher Furnace 展示全程脱敏的密码审计压力；Blackout Ledger 展示文件影响区与不可变快照恢复波。
+- **五种镜头**：`AUTO`、`OVERVIEW`、`CONTEST`、`CONTAINMENT`、`RECOVERY`；自动镜头会随剧情阶段切换，也可以锁定镜头录制。
 - **影视展示模式**：Broadcast Mode 会隐藏非必要面板，适合全屏录制、投屏或作为影视屏幕素材。
 - **本地合成音效**：浏览器实时生成提示音，不加载远程音频。
 - **节点检查器、实时指标、事件列表和仿真终端**。
@@ -64,9 +69,11 @@ npm run check  # 执行全部检查
 | `R` | 重置场景 |
 | `B` | 切换 Broadcast Mode |
 | `F` | 切换全屏 |
+| `W` | 切换影视指挥大屏 |
+| `V` | 循环切换大屏镜头 |
 | `1`–`9` | 快速切换场景 |
 
-拓扑节点和事件列表也都可以点击；点击事件可直接定位到对应时间。
+普通拓扑、大屏阶段节点、大屏系统卡片和前后剧情卡片都可以点击；所有视图共享同一条时间轴，切换不会重置剧情。
 
 ## 场景系统
 
@@ -77,7 +84,7 @@ CyberStage 采用事件溯源式 JSON 场景。每一个事件都可以改变：
 - 画面字幕与终端输出；
 - 一条可视化的信号流。
 
-从 [`examples/minimal-scene.json`](./examples/minimal-scene.json) 开始，参考[场景格式说明](./docs/scenario-format.md)和 [`schema/scenario.schema.json`](./schema/scenario.schema.json)。
+从 [`examples/minimal-scene.json`](./examples/minimal-scene.json) 开始，参考[场景格式说明](./docs/scenario-format.md)和 [`schema/scenario.schema.json`](./schema/scenario.schema.json)。影视指挥大屏直接读取同一份经过校验并冻结的场景状态，不建立第二套模拟逻辑。
 
 ## 安全边界
 
@@ -88,7 +95,8 @@ CyberStage 不是依赖“使用者自觉”来保持安全，而是在结构上
 3. 导入的 JSON 必须先经过场景校验；
 4. IPv4 地址只能使用三个文档专用网段；
 5. 所有自定义文本在进入 HTML/SVG 前都会转义；
-6. 项目不包含命令执行、原生桥接、后端服务或远程资源依赖。
+6. 项目不包含命令执行、原生桥接、后端服务或远程资源依赖；
+7. 影视指挥大屏只是已有确定性帧状态的只读渲染器，不处理密码、凭据、命令或真实目标。
 
 详见[安全模型](./docs/safety-model.md)。
 
