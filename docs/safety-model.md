@@ -60,7 +60,8 @@ Scenes are JSON data and cannot supply executable callbacks. Runtime validation 
 - prohibited markup;
 - URLs;
 - non-documentation IPv4 values;
-- non-documentation email domains.
+- non-documentation email domains;
+- structured operational fields such as commands, scripts, payloads, live targets, credentials, secrets, tokens, and ports.
 
 The compiler clones, normalizes, and deeply freezes validated scene data before use.
 

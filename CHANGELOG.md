@@ -6,6 +6,12 @@ The project follows [Semantic Versioning](https://semver.org/) for published rel
 
 ## [Unreleased]
 
+### Added
+
+- Realistic Computer Scene Pack with six defensive incident stories: Cipher Furnace, Control Plane Eclipse, Blackout Ledger, Phantom Inbox, Traffic Avalanche, and Glass Supply Chain.
+- Narrative-safety validation that rejects structured operational fields such as commands, executable payloads, live targets, credentials, and ports.
+- A scene catalogue documenting each built-in story, its visual arc, and its safety boundary.
+
 ### Planned
 
 - Visual Scene Composer.

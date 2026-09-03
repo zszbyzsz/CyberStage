@@ -31,6 +31,30 @@ const ALLOWED_NODE_TYPES = new Set([
   'broadcast',
 ]);
 
+const PROHIBITED_OPERATIONAL_KEYS = new Set([
+  'command',
+  'commands',
+  'shell',
+  'script',
+  'scripts',
+  'payload',
+  'payloads',
+  'exploit',
+  'exploits',
+  'target',
+  'targets',
+  'password',
+  'passwords',
+  'credential',
+  'credentials',
+  'secret',
+  'secrets',
+  'token',
+  'tokens',
+  'port',
+  'ports',
+]);
+
 const IPV4_PATTERN = /\b(?:\d{1,3}\.){3}\d{1,3}\b/g;
 const URL_PATTERN = /\b(?:https?|wss?):\/\/[^\s<>'"]+/gi;
 const EMAIL_PATTERN = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi;
@@ -73,6 +97,26 @@ function collectStrings(value, path, output) {
 
   if (value && typeof value === 'object') {
     Object.entries(value).forEach(([key, item]) => collectStrings(item, `${path}.${key}`, output));
+  }
+}
+
+/**
+ * @param {unknown} value
+ * @param {string} path
+ * @param {{path: string, key: string}[]} output
+ */
+function collectObjectKeys(value, path, output) {
+  if (Array.isArray(value)) {
+    value.forEach((item, index) => collectObjectKeys(item, path + '[' + index + ']', output));
+    return;
+  }
+
+  if (value && typeof value === 'object') {
+    Object.entries(value).forEach(([key, item]) => {
+      const keyPath = path + '.' + key;
+      output.push({ path: keyPath, key });
+      collectObjectKeys(item, keyPath, output);
+    });
   }
 }
 
@@ -228,6 +272,14 @@ export function validateScenario(candidate) {
     }
   });
 
+  const operationalKeys = [];
+  collectObjectKeys(scenario, '$', operationalKeys);
+  for (const entry of operationalKeys) {
+    if (PROHIBITED_OPERATIONAL_KEYS.has(entry.key.toLowerCase())) {
+      errors.push(entry.path + ' uses prohibited operational field ' + entry.key + '.');
+    }
+  }
+
   const strings = [];
   collectStrings(scenario, '$', strings);
   for (const entry of strings) {
@@ -270,4 +322,5 @@ export const scenarioSafetyConstants = Object.freeze({
   severities: Object.freeze([...ALLOWED_SEVERITIES]),
   themes: Object.freeze([...ALLOWED_THEMES]),
   nodeTypes: Object.freeze([...ALLOWED_NODE_TYPES]),
+  prohibitedOperationalKeys: Object.freeze([...PROHIBITED_OPERATIONAL_KEYS]),
 });

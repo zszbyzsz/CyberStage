@@ -23,6 +23,8 @@
   <a href="./README.zh-CN.md">简体中文</a>
   ·
   <a href="./docs/scenario-format.md">Create a scene</a>
+  ·
+  <a href="./docs/scene-catalogue.md">Scene catalogue</a>
 </p>
 
 ![CyberStage interface preview](./assets/preview.svg)
@@ -36,7 +38,7 @@ CyberStage turns defensive telemetry into something that can be **directed like 
 
 - Play, pause, scrub, loop, and change speed on a deterministic incident timeline.
 - Watch signals travel across an animated SVG topology while nodes change state.
-- Cut between three built-in story worlds: **Ghost Relay**, **Aurora Lockdown**, and **Midnight Switchboard**.
+- Cut between [nine built-in story worlds](./docs/scene-catalogue.md), including password auditing, server-control contention, ransomware recovery, phishing response, availability defense, and software-integrity incidents.
 - Enter **Broadcast Mode** for a clean full-screen shot suitable for video or projection.
 - Enable a small local soundscape generated with the Web Audio API—no audio files required.
 - Click any node to inspect its fictional zone, address, links, and signal state.

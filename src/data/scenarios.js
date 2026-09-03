@@ -3,6 +3,8 @@
  * comes from an IETF documentation-only range.
  */
 
+import { computerScenarios } from './computer-scenes.js';
+
 export const builtInScenarios = [
   {
     id: 'ghost-relay',
@@ -790,4 +792,5 @@ export const builtInScenarios = [
       },
     ],
   },
+  ...computerScenarios,
 ];
