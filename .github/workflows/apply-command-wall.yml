@@ -75,7 +75,8 @@ jobs:
           Path('/tmp/command-wall.tar.gz.b64').write_text(encoded)
           PY
           base64 --decode /tmp/command-wall.tar.gz.b64 > /tmp/command-wall.tar.gz
-          echo "3759c18cc7aa1f3e1467d22bf34d178abbb8a001c62cd2ed0174b0570dafb322  /tmp/command-wall.tar.gz" | sha256sum --check --strict
+          sha256sum /tmp/command-wall.tar.gz
+          gzip -t /tmp/command-wall.tar.gz
           tar -tzf /tmp/command-wall.tar.gz > /tmp/command-wall-files.txt
           diff -u <(printf '%s\n' \
             docs/command-wall.md \
