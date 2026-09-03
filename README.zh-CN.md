@@ -16,6 +16,8 @@
   <a href="./README.md">English</a>
   ·
   <a href="./docs/scenario-format.md">编写新场景</a>
+  ·
+  <a href="./docs/scene-catalogue.md">场景目录</a>
 </p>
 
 ![CyberStage 界面预览](./assets/preview.svg)
@@ -25,7 +27,7 @@
 
 ## 首版已经具备什么
 
-- **三套完整剧情**：Ghost Relay、Aurora Lockdown、Midnight Switchboard。
+- **九套完整剧情**：除三套原创世界外，新增密码审计、服务器后台控制权争夺、勒索事件恢复、钓鱼会话劫持、流量洪峰和软件供应链篡改；详见[场景目录](./docs/scene-catalogue.md)。
 - **可导演时间轴**：播放、暂停、拖动、循环以及 `0.5×`–`2×` 倍速。
 - **动态攻防拓扑**：信号沿 SVG 链路移动，节点随事件进入观察、告警、隔离和恢复状态。
 - **影视展示模式**：Broadcast Mode 会隐藏非必要面板，适合全屏录制、投屏或作为影视屏幕素材。
