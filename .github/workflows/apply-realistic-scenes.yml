@@ -1,0 +1,48 @@
+name: Integrate realistic computer scenes
+
+on:
+  push:
+    branches:
+      - feat/realistic-computer-scenes
+    paths:
+      - ".bootstrap/**"
+      - ".github/workflows/apply-realistic-scenes.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  integrate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+
+    steps:
+      - name: Check out scene branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: feat/realistic-computer-scenes
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 22
+
+      - name: Apply integration patch
+        run: node .bootstrap/apply-realistic-scenes.mjs
+
+      - name: Remove one-time workflow
+        run: rm .github/workflows/apply-realistic-scenes.yml
+
+      - name: Validate complete project
+        run: npm run check
+
+      - name: Commit integrated scene pack
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add --all
+          git commit -m "feat: add realistic computer incident scene pack"
+          git push origin HEAD:feat/realistic-computer-scenes
