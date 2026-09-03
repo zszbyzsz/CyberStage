@@ -28,6 +28,22 @@ jobs:
         with:
           node-version: 22
 
+      - name: Normalize one-time patch helper
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('.bootstrap/apply-realistic-scenes.mjs')
+          source = path.read_text()
+          block = """  if (source.indexOf(needle, first + needle.length) >= 0) {
+              throw new Error(`${path}: expected marker is not unique`);
+            }
+          """
+          if block not in source:
+              raise SystemExit('patch helper guard block not found')
+          path.write_text(source.replace(block, ''))
+          PY
+
       - name: Apply integration patch
         run: node .bootstrap/apply-realistic-scenes.mjs
 
