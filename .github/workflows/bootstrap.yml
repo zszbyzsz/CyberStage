@@ -1,0 +1,52 @@
+name: Assemble CyberStage v0.1
+
+on:
+  push:
+    branches:
+      - feat/interactive-stage-v0.1
+    paths:
+      - ".bootstrap/**"
+      - ".github/workflows/bootstrap.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  assemble:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out the staging branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: feat/interactive-stage-v0.1
+
+      - name: Verify and unpack the source bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .bootstrap/part-* > /tmp/cyberstage.tar.gz.b64
+          echo "14e4f317dc62af2b87275f171e3f492346a86dcdaafc48166b9a47d40862aa7f  /tmp/cyberstage.tar.gz.b64" | sha256sum --check --strict
+          base64 --decode /tmp/cyberstage.tar.gz.b64 > /tmp/cyberstage.tar.gz
+          echo "f98ef496173bba526c7f10ddb4185dfe489a90680e280f4fcb7fe8e2d9a613fd  /tmp/cyberstage.tar.gz" | sha256sum --check --strict
+          tar -tzf /tmp/cyberstage.tar.gz > /tmp/cyberstage-files.txt
+          test "$(wc -l < /tmp/cyberstage-files.txt)" -eq 41
+          ! grep -Eq '(^/|(^|/)\.\.(/|$))' /tmp/cyberstage-files.txt
+          tar -xzf /tmp/cyberstage.tar.gz
+          rm -rf .bootstrap
+
+      - name: Commit the assembled source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add --all
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git commit -m "feat: launch CyberStage v0.1 interactive stage"
+          git push origin HEAD:feat/interactive-stage-v0.1
