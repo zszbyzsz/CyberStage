@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security report
+    url: https://github.com/zszbyzsz/CyberStage/security
+    about: Use a private security report for capability-boundary or injection vulnerabilities.

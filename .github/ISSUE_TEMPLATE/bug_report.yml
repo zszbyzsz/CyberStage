@@ -1,0 +1,59 @@
+name: Bug report
+description: Report a reproducible visual, timing, accessibility, or validation defect.
+title: "bug: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a CyberStage defect. Do not include live targets, credentials, or operational attack material.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Timeline and playback
+        - Topology rendering
+        - Scene validation or import
+        - Director controls
+        - Broadcast or fullscreen mode
+        - Accessibility
+        - Build, test, or deployment
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: observed
+    attributes:
+      label: What happened?
+      description: Include the scene, timestamp, and visible result.
+      placeholder: In Ghost Relay at 00:45.0, ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What should happen?
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and operating system
+      placeholder: Firefox 143 on Ubuntu 24.04
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+      description: Use only inert scene data. Remove private information.
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Safety confirmation
+      options:
+        - label: This report contains no live target, credential, payload, or actionable intrusion instruction.
+          required: true

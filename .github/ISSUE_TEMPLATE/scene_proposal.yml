@@ -1,0 +1,43 @@
+name: Scene proposal
+description: Pitch a new fictional CyberStage story before writing the full JSON.
+title: "scene: "
+body:
+  - type: input
+    id: title
+    attributes:
+      label: Working title
+      placeholder: Orbital Quiet
+    validations:
+      required: true
+  - type: textarea
+    id: premise
+    attributes:
+      label: Premise
+      description: Summarize the fictional environment, anomaly, and defensive objective.
+    validations:
+      required: true
+  - type: textarea
+    id: arc
+    attributes:
+      label: Visual arc
+      description: Outline Observe, Correlate, Escalate, Contain, and Recover beats.
+    validations:
+      required: true
+  - type: textarea
+    id: audience
+    attributes:
+      label: Intended use
+      placeholder: A slow-burn orbital control-room scene for film and classroom discussion.
+    validations:
+      required: true
+  - type: checkboxes
+    id: fiction
+    attributes:
+      label: Fiction and safety
+      options:
+        - label: Organizations, people, logs, and incidents will be fictional.
+          required: true
+        - label: Addresses will use CyberStage documentation-only ranges.
+          required: true
+        - label: The scene will show defensive reasoning without actionable intrusion steps.
+          required: true
