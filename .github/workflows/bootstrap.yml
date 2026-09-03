@@ -28,6 +28,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          wc -c .bootstrap/part-*
+          sha256sum .bootstrap/part-*
           cat .bootstrap/part-* > /tmp/cyberstage.tar.gz.b64
           echo "14e4f317dc62af2b87275f171e3f492346a86dcdaafc48166b9a47d40862aa7f  /tmp/cyberstage.tar.gz.b64" | sha256sum --check --strict
           base64 --decode /tmp/cyberstage.tar.gz.b64 > /tmp/cyberstage.tar.gz
