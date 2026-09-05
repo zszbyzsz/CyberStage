@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'none'; form-action 'none'" />
+    <meta name="description" content="CyberStage Scene Composer preview — local topology authoring." />
+    <meta name="color-scheme" content="dark" />
+    <title>Scene Composer Preview · CyberStage</title>
+    <link rel="icon" href="./assets/cyberstage-mark.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./src/composer/composer.css" />
+  </head>
+  <body class="composer-page">
+    <nav aria-label="CyberStage navigation"><a href="./" class="composer-button">Back to CyberStage</a></nav>
+    <p class="composer-help" role="note">PREVIEW: topology editing is available. Playback-compatible scene export and integration with the existing scene safety validator are not yet complete. Keep draft backups using State; this preview does not complete the v0.2 acceptance criteria.</p>
+    <noscript>Scene Composer requires JavaScript.</noscript>
+    <div data-scene-composer></div>
+    <script type="module" src="./src/composer/composer-entry.js"></script>
+  </body>
+</html>
